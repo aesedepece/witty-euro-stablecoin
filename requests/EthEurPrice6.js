@@ -40,7 +40,7 @@ const bitfinex = new Witnet.Source("https://api.bitfinex.com/v1/pubticker/etheur
   .round()
 
 // Retrieves ETHEUR price of eth from the Bittrex API
-const bittrex = new Witnet.Source("https://api.bittrex.com/api/v1.1/public/getticker?market=BTC-LTC")
+const bittrex = new Witnet.Source("https://api.bittrex.com/api/v1.1/public/getticker?market=EUR-ETH")
   .parseJSONMap()
   .getMap("result")
   .getFloat("Last")
