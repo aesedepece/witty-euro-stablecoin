@@ -22,6 +22,10 @@ jobs:
         run: npm install
       - name: Compile Witnet data requests
         run: npm run compile:requests
+      - name: Download witnet_toolkit
+        run: touch node_modules/witnet-requests/assets/witnet_toolkit-x86_64-unknown-linux-gnu && npx witnet-toolkit update
+      - name: Try data request
+        run: npm run try
       - name: Compile Solidity contracts
         run: npm run compile:contracts
       - name: Try local migration
