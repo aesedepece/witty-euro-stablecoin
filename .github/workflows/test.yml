@@ -1,0 +1,30 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install dependencies and run postinstall
+        run: npm install
+      - name: Compile Witnet data requests
+        run: npm run compile:requests
+      - name: Compile Solidity contracts
+        run: npm run compile:contracts
+      - name: Try local migration
+        run: npm run migrate
+      - name: Run tests
+        run: npm test
