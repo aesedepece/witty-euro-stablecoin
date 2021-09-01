@@ -2,7 +2,7 @@ const WEUR = artifacts.require("WEUR")
 const WitnetProxy = artifacts.require("WitnetProxy")
 const WitnetRequestBoard = artifacts.require("WitnetRequestBoard")
 
-const { expectRevert } = require("@openzeppelin/test-helpers")
+const { expectRevert, balance } = require("@openzeppelin/test-helpers")
 
 contract("WEUR", (accounts) => {
   let weur, wrb, witnetFee
@@ -11,6 +11,8 @@ contract("WEUR", (accounts) => {
   const bob = accounts[2]
   const charlie = accounts[3]
 
+  let aliceBalance
+
   const gasPrice = web3.utils.toWei("1", "gwei")
 
   describe("End-2-end", () => {
@@ -18,6 +20,7 @@ contract("WEUR", (accounts) => {
       weur = await WEUR.deployed()
       wrb = await WitnetRequestBoard.at(WitnetProxy.address)
       witnetFee = parseInt(await wrb.estimateReward(gasPrice))
+      aliceBalance = await balance.tracker(alice)
     })
 
     it("shouldn't allow minting before basing", async () => {
@@ -114,6 +117,29 @@ contract("WEUR", (accounts) => {
       await weur.transfer(bob, 50000, { from: alice })
       assert(parseInt(await weur.balanceOf(alice)) === 100000, "Alice's balance is not correct")
       assert(parseInt(await weur.balanceOf(bob)) === 50000, "Bob's balance is not correct")
+    })
+
+    it("should allow burning WEUR", async () => {
+      await aliceBalance.get()
+      await weur.burn(100000, { from: alice })
+      assert(parseInt(await weur.balanceOf(alice)) === 0, "Alice's balance hasn't been burnt")
+    })
+
+    it("should have refunded the right amount of ETH", async () => {
+      const { delta, fees } = await aliceBalance.deltaWithFees()
+      assert(
+        parseInt(delta) + parseInt(fees) === parseInt(web3.utils.toWei("2", "ether")),
+        "Alice's balance is not correct"
+      )
+    })
+
+    it("shouldn't allow burning WEUR that you don't have", async () => {
+      expectRevert(
+        weur.burn(1, { from: alice }),
+        "ERC20: burn amount exceeds balance"
+      )
+      const { delta, fees } = await aliceBalance.deltaWithFees()
+      assert(parseInt(delta) === parseInt(fees), "Alice's balance is not correct")
     })
   })
 })

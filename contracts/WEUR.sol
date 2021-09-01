@@ -150,10 +150,10 @@ contract WEUR is UsingWitnet, ERC20 {
      * @notice Burn WEUR and withdraw equivalent amount of internal units (wei).
      */
     function burn(uint64 weurAmount) public payable isBased {
-        uint64 ethAmount = weurAmount / base;
+        uint64 ethAmount = weurAmount * base * 10_000;
 
         // Burn aaccording number of internal units
-        _burn(msg.sender, msg.value);
+        _burn(msg.sender, ethAmount);
 
         payable(msg.sender).transfer(ethAmount);
     }
