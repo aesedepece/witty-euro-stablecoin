@@ -1,13 +1,13 @@
 import * as Witnet from "witnet-requests"
 
-// Retrieves ETHEUR price of CFX from the Binance API
+// Retrieves ETHEUR price from the Binance API
 const binance = new Witnet.Source("https://api.binance.com/api/v3/ticker/price?symbol=ETHEUR")
   .parseJSONMap()
   .getFloat("price")
   .multiply(10 ** 6)
   .round()
 
-// Retrieves ETHEUR price of CFX from the Coinbase API
+// Retrieves ETHEUR price from the Coinbase API
 const coinbase = new Witnet.Source("https://api.coinbase.com/v2/prices/ETH-EUR/spot")
   .parseJSONMap()
   .getMap("data")
@@ -15,7 +15,7 @@ const coinbase = new Witnet.Source("https://api.coinbase.com/v2/prices/ETH-EUR/s
   .multiply(10 ** 6)
   .round()
 
-// Retrieves ETHEUR price of CFX from the Coinbase API
+// Retrieves ETHEUR price from the Coinbase API
 const kraken = new Witnet.Source("https://api.kraken.com/0/public/Ticker?pair=ETHEUR")
   .parseJSONMap()
   .getMap("result")
@@ -25,21 +25,21 @@ const kraken = new Witnet.Source("https://api.kraken.com/0/public/Ticker?pair=ET
   .multiply(10 ** 6)
   .round()
 
-// Retrieves ETHEUR price of eth from the BitStamp API
+// Retrieves ETHEUR price from the BitStamp API
 const bitstamp = new Witnet.Source("https://www.bitstamp.net/api/v2/ticker/etheur/")
   .parseJSONMap()
   .getFloat("last")
   .multiply(10 ** 6)
   .round()
 
-// Retrieves ETHEUR price of eth from the Bitfinex API
+// Retrieves ETHEUR price from the Bitfinex API
 const bitfinex = new Witnet.Source("https://api.bitfinex.com/v1/pubticker/etheur")
   .parseJSONMap()
   .getFloat("last_price")
   .multiply(10 ** 6)
   .round()
 
-// Retrieves ETHEUR price of eth from the Bittrex API
+// Retrieves ETHEUR price from the Bittrex API
 const bittrex = new Witnet.Source("https://api.bittrex.com/api/v1.1/public/getticker?market=EUR-ETH")
   .parseJSONMap()
   .getMap("result")
